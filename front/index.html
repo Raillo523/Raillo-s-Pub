@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--FAVICON-->
+    <link rel="shortcut icon" href="/assets/icon.png" type="image/x-icon" />
+    <link rel="icon" href="/assets/icon.png" type="image/x-icon" />
+    <!--ICONOS-->
+    <script
+      src="https://kit.fontawesome.com/8392593ab0.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--JQUERY-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>RAILLO'S PUB</title>
+    <!--CSS-->
+    <style>
+            @import url("https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Pirata+One&display=swap");
+
+            * {
+              margin: 0;
+              padding: 0;
+            }
+
+
+            /* BANNER */
+
+            .banner_principal {
+                display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              align-items: center;
+            }
+
+            .titulo_contenedor {
+              margin-right: 12%;
+            }
+
+            .sesion {
+              margin-right: 8%;
+          }
+
+          /* MENU */
+
+          .menu-icon {
+              position: relative;
+              display: inline-block;
+          }
+
+          .icon {
+              width: 300px;
+              height: auto;
+              cursor: pointer;
+            }
+
+            .dropdown-menu {
+              margin: 20px;
+              padding: 40px;
+              display: none;
+              position: absolute;
+              top: 50px;
+              right: 0;
+              background-color: #23552e;
+              padding: 10px;
+              border-radius: 10px;
+              z-index: 1000;
+              box-shadow: 0 4px 10px rgba(37, 230, 123, 0.726);
+          }
+
+          .dropdown-menu a {
+              padding: 40px;
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              color: rgb(192, 247, 200);
+              padding: 10px;
+              text-decoration: none;
+              font-family: "Cormorant Garamond";
+              font-weight: bold;
+              border-bottom: 1px solid #333;
+              transition: 0.2s ease;
+            }
+
+            .dropdown-menu a:last-child {
+              border-bottom: none;
+            }
+
+            .dropdown-menu a:hover {
+              background-color: #1f6d30;
+            }
+
+            body {
+              background-image: url("/assets/fondo1.png");
+              background-repeat: no-repeat;
+              background-size: cover;
+            }
+
+            .titulo {
+              font-family: "Pirata One", cursive;
+              font-size: 70px;
+              color: #06b606; /* Verde oscuro (color irlandés) */
+              text-shadow: 2px 2px 4px rgba(0, 100, 0, 0.5), 0 0 25px green,
+                0 0 5px rgb(26, 177, 26);
+              letter-spacing: 2px;
+              text-transform: uppercase; /* Hace el texto más impactante */
+            }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="banner_principal">
+        <div class="menu-icon">
+          <img src="/assets/icon.png" alt="icono" class="icon" />
+          <div class="dropdown-menu">
+            <a href="index.html">
+              <i class="fa-solid fa-house"></i>
+              <p>INICIO</p>
+            </a>
+            <a href="webs/carta.html">
+              <i class="fa-solid fa-bookmark"></i>
+              <p>NUESTRA CARTA</p>
+            </a>
+            <a href="webs/eventos.html">
+              <i class="fa-solid fa-champagne-glasses"></i>
+              <p>EVENTOS ESPECIALES</p>
+            </a>
+            <a href="webs/reservas.html">
+              <i class="fa-solid fa-table"></i>
+              <p>RESERVA TU MESA</p>
+            </a>
+            <a href="webs/admin.html">
+              <i class="fa-solid fa-user-tie"></i>
+              <p>PANEL TRABAJADODRES (ADMIN)</p>
+            </a>
+          </div>
+        </div>
+        <div class="titulo_contenedor">
+          <h1 class="titulo">RAILLO'S PUB</h1>
+        </div>
+        <div class="sesion">
+          <i class="fa-solid fa-user"></i>
+          <div id="user"></div>
+        </div>
+      </div>
+    </header>
+  </body>
+
+  <script>
+    $(document).ready(function () {
+      $(".menu-icon .icon").click(function (e) {
+        e.stopPropagation(); // Evita que el menú se cierre al hacer clic en el icono
+        $(".dropdown-menu").slideToggle(200);
+      });
+
+      $(document).click(function () {
+        $(".dropdown-menu").slideUp(200); // Oculta el menú al hacer clic fuera
+      });
+
+      $(".dropdown-menu").click(function (e) {
+        e.stopPropagation(); // Evita que se cierre al hacer clic dentro del menú
+      });
+    });
+  </script>
+</html>
