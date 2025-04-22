@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!--FAVICON-->
+        <link rel="shortcut icon" href="/assets/icon.png" type="image/x-icon" />
+        <link rel="icon" href="/assets/icon.png" type="image/x-icon" />
+        <!--ICONOS-->
+        <script
+            src="https://kit.fontawesome.com/8392593ab0.js"
+            crossorigin="anonymous"
+        ></script>
+        <!--JQUERY-->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <title>RAILLO'S PUB</title>
+        <!--CSS-->
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Anton&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Pirata+One&family=Uncial+Antiqua&display=swap");
+
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            /* BANNER */
+
+            .banner_principal {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .titulo_contenedor {
+                margin-right: 12%;
+            }
+
+            .sesion {
+                margin-right: 8%;
+            }
+
+            /* MENU */
+
+            .menu-icon {
+                position: relative;
+                display: inline-block;
+            }
+
+            .icon {
+                width: 300px;
+                height: auto;
+                cursor: pointer;
+            }
+
+            .dropdown-menu {
+                margin: 20px;
+                padding: 40px;
+                display: none;
+                position: absolute;
+                top: 50px;
+                right: 0;
+                background-color: #23552e;
+                padding: 10px;
+                border-radius: 10px;
+                z-index: 1000;
+                box-shadow: 0 4px 10px rgba(37, 230, 123, 0.726);
+            }
+
+            .dropdown-menu a {
+                padding: 40px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: rgb(192, 247, 200);
+                padding: 10px;
+                text-decoration: none;
+                font-family: "Cormorant Garamond";
+                font-weight: bold;
+                border-bottom: 1px solid #333;
+                transition: 0.2s ease;
+            }
+
+            .dropdown-menu a:last-child {
+                border-bottom: none;
+            }
+
+            .dropdown-menu a:hover {
+                background-color: #1f6d30;
+            }
+
+            body {
+                background-image: url("/assets/fondo1.png");
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            .titulo {
+                font-family: "Pirata One", cursive;
+                font-size: 70px;
+                color: #06b606; /* Verde oscuro (color irlandés) */
+                text-shadow: 2px 2px 4px rgba(0, 100, 0, 0.5), 0 0 25px green,
+                    0 0 5px rgb(26, 177, 26);
+                letter-spacing: 2px;
+                text-transform: uppercase; /* Hace el texto más impactante */
+            }
+
+            .reseñas {
+                font-family: "Uncial Antiqua", cursive;
+                background: #18381c;
+                border: 3px solid #a67c00;
+                border-radius: 16px;
+                padding: 2rem;
+                color: #f1e8d9;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+                max-width: 600px;
+                margin: 3rem auto;
+                text-align: center;
+            }
+
+            .reseña,
+            .reseña-activa {
+                display: none;
+            }
+
+            .reseña-activa {
+                display: block;
+            }
+
+            .nombre-cliente {
+                font-size: 1.4rem;
+                font-weight: bold;
+                color: #e3c565;
+                margin-bottom: 0.3rem;
+            }
+
+            .estrellas {
+                color: #ffd700;
+                font-size: 1.2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .texto-reseña {
+                font-style: italic;
+                font-size: 1.1rem;
+                line-height: 1.6;
+            }
+
+            /* CARRUSEL */
+
+            /* CARRUSEL MEJORADO */
+
+            .carrusel-contenedor {
+                width: 100%;
+                max-width: 900px;
+                height: 500px;
+                margin: 50px auto;
+                overflow: hidden;
+                position: relative;
+                border-radius: 20px;
+                border: 4px solid #a67c00;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+                background: linear-gradient(120deg, #f4f1ee, #e9e5e0);
+                background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+                background-blend-mode: multiply;
+            }
+
+            .carrusel {
+                position: relative;
+                width: 100%;
+                height: 100%;
+            }
+
+            .carrusel-img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Hace que la imagen cubra el área sin distorsionarse */
+                opacity: 0;
+                transition: opacity 1s ease-in-out, transform 1s ease;
+                border-radius: 20px;
+                z-index: 0;
+            }
+
+            .carrusel-img.carrusel-activa {
+                opacity: 1;
+                z-index: 1;
+                transform: scale(1.05); /* Efecto de zoom suave */
+            }
+
+            .carrusel-flecha {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 2.5rem;
+                background-color: rgba(24, 56, 28, 0.85);
+                color: #f1e8d9;
+                padding: 12px;
+                border-radius: 50%;
+                cursor: pointer;
+                z-index: 10;
+                transition: background-color 0.3s, transform 0.3s;
+            }
+
+            .carrusel-flecha:hover {
+                background-color: #1f6d30;
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            .carrusel-prev {
+                left: 20px;
+            }
+
+            .carrusel-next {
+                right: 20px;
+            }
+
+            .carrusel-indicadores {
+                text-align: center;
+                margin-top: 15px;
+            }
+
+            .indicador {
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                margin: 0 6px;
+                background-color: #4d774e;
+                border-radius: 50%;
+                cursor: pointer;
+                transition: background-color 0.3s ease, transform 0.3s;
+                border: 2px solid #a67c00;
+            }
+
+            .indicador:hover {
+                background-color: #d4af37;
+                transform: scale(1.2);
+            }
+
+            .indicador.activo {
+                background-color: #d4af37;
+                box-shadow: 0 0 6px #d4af37;
+            }
+
+            /* MODAL */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 999;
+                padding-top: 100px;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+            }
+            .modal-content {
+                background-color: #111;
+                margin: auto;
+                padding: 20px;
+                border: 1px solid #888;
+                width: 300px;
+                border-radius: 10px;
+                color: #fff;
+                font-family: "Cinzel Decorative", cursive;
+            }
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 24px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+            input,
+            button {
+                width: 100%;
+                padding: 8px;
+                margin: 10px 0;
+                font-size: 16px;
+            }
+            button {
+                background-color: #008000;
+                color: white;
+                border: none;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="banner_principal">
+                <div class="menu-icon">
+                    <img src="assets/logo.png" alt="icono" class="icon" />
+                    <div class="dropdown-menu">
+                        <a href="index.html">
+                            <i class="fa-solid fa-house"></i>
+                            <p>INICIO</p>
+                        </a>
+                        <a href="webs/carta.html">
+                            <i class="fa-solid fa-bookmark"></i>
+                            <p>NUESTRA CARTA</p>
+                        </a>
+                        <a href="webs/eventos.html">
+                            <i class="fa-solid fa-champagne-glasses"></i>
+                            <p>EVENTOS ESPECIALES</p>
+                        </a>
+                        <a href="webs/reservas.html">
+                            <i class="fa-solid fa-table"></i>
+                            <p>RESERVA TU MESA</p>
+                        </a>
+                    </div>
+                </div>
+                <div class="titulo_contenedor">
+                    <h1 class="titulo">RAILLO'S PUB</h1>
+                </div>
+                <div class="sesion">
+                    <i class="fa-solid fa-user"></i>
+                    <div id="user"></div>
+                </div>
+
+                <!-- Modal de login -->
+                <div id="loginModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Iniciar Sesión</h2>
+                        <form id="loginForm">
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Correo"
+                                required
+                            />
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Contraseña"
+                                required
+                            />
+                            <button type="submit">Entrar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="carrusel-contenedor">
+            <div class="carrusel-flecha carrusel-prev">
+                <i class="fa-solid fa-chevron-left"></i>
+            </div>
+            <div class="carrusel">
+                <img
+                    src="/assets/i1.png"
+                    class="carrusel-img carrusel-activa"
+                    alt="Interior del pub"
+                />
+                <img
+                    src="/assets/i2.jpg"
+                    class="carrusel-img"
+                    alt="Barra y cervezas"
+                />
+                <img
+                    src="/assets/i3.PNG"
+                    class="carrusel-img"
+                    alt="Ambiente con clientes"
+                />
+                <img
+                    src="/assets/i4.jpg"
+                    class="carrusel-img"
+                    alt="Decoración irlandesa"
+                />
+            </div>
+            <div class="carrusel-flecha carrusel-next">
+                <i class="fa-solid fa-chevron-right"></i>
+            </div>
+        </div>
+        <div class="carrusel-indicadores">
+            <span class="indicador activo" data-index="0"></span>
+            <span class="indicador" data-index="1"></span>
+            <span class="indicador" data-index="2"></span>
+            <span class="indicador" data-index="3"></span>
+        </div>
+
+        <div class="reseñas">
+            <div class="reseña reseña-activa">
+                <div class="nombre-cliente">Carlos Martínez</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Ambiente increíble, ideal para venir con amigos. La Guinness
+                    perfecta.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Lucía Fernández</div>
+                <div class="estrellas">⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Muy buen trato y atención. Las cachimbas de sabores únicos,
+                    repetiré.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Javier Gómez</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Me encantó la decoración, muy auténtica. La carta muy bien
+                    pensada.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Ana López</div>
+                <div class="estrellas">⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Todo genial pero había demasiada gente. Aun así, volveré.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">David Ruiz</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    La mejor Paulaner que he probado fuera de Alemania.
+                    Buenísima.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">María Torres</div>
+                <div class="estrellas">⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Un sitio diferente y con mucho encanto. Los cócteles están
+                    top.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Pedro Sánchez</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Perfecto para celebrar algo especial. Buena música y precios
+                    decentes.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Laura Pérez</div>
+                <div class="estrellas">⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Fui por curiosidad y me sorprendió para bien. Sitio muy
+                    cuidado.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Sergio Romero</div>
+                <div class="estrellas">⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    La carta está bien, pero eché de menos alguna tapa o
+                    picoteo.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Cristina Navarro</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    ¡Espectacular! Todo cuidado al detalle. Muy recomendable.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Pablo Ortega</div>
+                <div class="estrellas">⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Lo descubrí por casualidad y ahora voy siempre. La carta de
+                    cervezas es brutal.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Raquel Vargas</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Un pub con personalidad. ¡Genial para desconectar!
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Álvaro Morales</div>
+                <div class="estrellas">⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Los camareros muy simpáticos y atentos. Buen rollo siempre.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Claudia León</div>
+                <div class="estrellas">⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    La música estaba algo alta, pero todo lo demás perfecto.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Hugo Delgado</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Eventos temáticos muy divertidos. El de San Patricio fue una
+                    pasada.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Sara Ríos</div>
+                <div class="estrellas">⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Decoración muy original y cuidada. Se nota el mimo en cada
+                    detalle.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Iván Domínguez</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Reservé online sin problemas. Muy fácil y rápido.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Isabel Molina</div>
+                <div class="estrellas">⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Todo bien, pero me costó encontrar sitio para sentarme.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Tomás Herrera</div>
+                <div class="estrellas">⭐⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Las cervezas IPA que tienen no se encuentran en cualquier
+                    sitio. Top.
+                </p>
+            </div>
+            <div class="reseña">
+                <div class="nombre-cliente">Marta Serrano</div>
+                <div class="estrellas">⭐⭐⭐⭐</div>
+                <p class="texto-reseña">
+                    Me encantó que cambiaran las luces según la música,
+                    ¡detallazo!
+                </p>
+            </div>
+        </div>
+
+        <!-- Sección de Información -->
+        <div
+            class="footer-info"
+            style="
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 2rem 0;
+                text-align: center;
+            "
+        >
+            <h3
+                style="
+                    font-family: 'Pirata One', cursive;
+                    font-size: 2rem;
+                    color: #d4af37;
+                "
+            >
+                RAILLO'S PUB
+            </h3>
+            <p style="font-size: 1.1rem; color: #f1e8d9; margin-top: 1rem">
+                El mejor ambiente irlandés en tu ciudad. Disfruta de buena
+                música, cervezas artesanales y amigos.
+            </p>
+            <div class="footer-social" style="margin-top: 1.5rem">
+                <a
+                    href="https://www.instagram.com/ellaillo_12/"
+                    class="logo_ig"
+                    style="
+                        margin: 0 15px;
+                        color: #ffd700;
+                        font-size: 1.8rem;
+                        transition: 0.2s ease;
+                    "
+                >
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer Bottom -->
+        <div
+            class="footer-bottom"
+            style="text-align: center; padding: 1rem; background-color: #18381c"
+        >
+            <p
+                style="
+                    font-family: 'Uncial Antiqua', cursive;
+                    font-size: 1rem;
+                    color: #f1e8d9;
+                "
+            >
+                © 2025 RAILLO'S PUB | Todos los derechos reservados
+            </p>
+        </div>
+    </body>
+
+    <script>
+        $(document).ready(function () {
+            // === MENÚ DESPLEGABLE ===
+            $(".menu-icon .icon").click(function (e) {
+                e.stopPropagation(); // Evita que el menú se cierre al hacer clic en el icono
+                $(".dropdown-menu").slideToggle(200);
+            });
+
+            $(document).click(function () {
+                $(".dropdown-menu").slideUp(200); // Oculta el menú al hacer clic fuera
+            });
+
+            $(".dropdown-menu").click(function (e) {
+                e.stopPropagation(); // Evita que se cierre al hacer clic dentro del menú
+            });
+
+            // === RESEÑAS AUTOMÁTICAS ===
+            let index = 0;
+            const reseñas = $(".reseñas .reseña, .reseñas .reseña-activa");
+
+            function mostrarSiguienteReseña() {
+                $(reseñas[index]).fadeOut(500, function () {
+                    $(this).removeClass("reseña-activa").addClass("reseña");
+                    index = (index + 1) % reseñas.length;
+                    $(reseñas[index])
+                        .fadeIn(1000)
+                        .removeClass("reseña")
+                        .addClass("reseña-activa");
+                });
+            }
+
+            setInterval(mostrarSiguienteReseña, 6000); // Cambia cada 6 segundos
+
+            // === CARRUSEL DE IMÁGENES ===
+            let imgIndex = 0;
+            const imagenes = $(".carrusel-img");
+            const indicadores = $(".indicador");
+
+            function cambiarImagen(nuevaIndex) {
+                imagenes.removeClass("carrusel-activa");
+                $(imagenes[nuevaIndex]).addClass("carrusel-activa");
+
+                indicadores.removeClass("activo");
+                $(indicadores[nuevaIndex]).addClass("activo");
+
+                imgIndex = nuevaIndex;
+            }
+
+            $(".carrusel-next").click(function () {
+                let nuevaIndex = (imgIndex + 1) % imagenes.length;
+                cambiarImagen(nuevaIndex);
+            });
+
+            $(".carrusel-prev").click(function () {
+                let nuevaIndex =
+                    (imgIndex - 1 + imagenes.length) % imagenes.length;
+                cambiarImagen(nuevaIndex);
+            });
+
+            indicadores.click(function () {
+                let nuevaIndex = $(this).data("index");
+                cambiarImagen(nuevaIndex);
+            });
+
+            setInterval(function () {
+                let nuevaIndex = (imgIndex + 1) % imagenes.length;
+                cambiarImagen(nuevaIndex);
+            }, 9000); // Cambia de imagen cada 7 segundos
+        });
+
+        $(document).ready(function () {
+            // Verificar sesión
+            $.get("/api/user", function (data) {
+                if (data && data.name) {
+                    $("#user").html("Bienvenido, " + data.name);
+                    $(".dropdown-menu").append(`
+        <a href="webs/admin.html">
+          <i class="fa-solid fa-user-tie"></i>
+          <p>PANEL TRABAJADORES (ADMIN)</p>
+        </a>`);
+                } else {
+                    $("#user").html(
+                        '<button id="loginBtn">¿Eres trabajador?</button>'
+                    );
+                }
+            });
+
+            // Modal
+            $(document).on("click", "#loginBtn", function () {
+                $("#loginModal").fadeIn();
+            });
+
+            $(".close").click(function () {
+                $("#loginModal").fadeOut();
+            });
+
+            // Login
+            $("#loginForm").submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "/login",
+                    method: "POST",
+                    data: $(this).serialize(),
+                    success: function (res) {
+                        if (res.success) {
+                            location.reload();
+                        } else {
+                            alert("Credenciales incorrectas");
+                        }
+                    },
+                    error: function () {
+                        alert("Error de servidor.");
+                    },
+                });
+            });
+        });
+    </script>
+</html>
