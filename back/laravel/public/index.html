@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="csrf-token" content="{{csrf_token}}" />
         <!--FAVICON-->
         <link rel="shortcut icon" href="/assets/icon.png" type="image/x-icon" />
         <link rel="icon" href="/assets/icon.png" type="image/x-icon" />
@@ -30,14 +31,47 @@
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
+                padding: 0 3%;
+                width: 94%;
             }
 
             .titulo_contenedor {
-                margin-right: 12%;
+                margin-right: 0;
+                text-align: center;
+                flex: 1;
             }
 
             .sesion {
-                margin-right: 8%;
+                margin-right: 4%;
+                margin-left: 3%;
+                display: flex;
+                align-items: center;
+                flex: 0 0 auto;
+            }
+
+            body {
+                background-image: url("/assets/fondo1.png");
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+
+            .titulo {
+                margin-left: 0;
+                font-family: "Pirata One", cursive;
+                font-size: 70px;
+                color: #06b606; /* Verde oscuro (color irlandés) */
+                text-shadow: 2px 2px 4px rgba(0, 100, 0, 0.5), 0 0 25px green,
+                    0 0 5px rgb(26, 177, 26);
+                letter-spacing: 2px;
+                text-transform: uppercase; /* Hace el texto más impactante */
+            }
+
+            #user-icon {
+                margin-right: 8px;
+            }
+
+            #user {
+                margin-left: 0;
             }
 
             /* MENU */
@@ -45,6 +79,7 @@
             .menu-icon {
                 position: relative;
                 display: inline-block;
+                flex: 0 0 auto;
             }
 
             .icon {
@@ -87,22 +122,6 @@
 
             .dropdown-menu a:hover {
                 background-color: #1f6d30;
-            }
-
-            body {
-                background-image: url("/assets/fondo1.png");
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-
-            .titulo {
-                font-family: "Pirata One", cursive;
-                font-size: 70px;
-                color: #06b606; /* Verde oscuro (color irlandés) */
-                text-shadow: 2px 2px 4px rgba(0, 100, 0, 0.5), 0 0 25px green,
-                    0 0 5px rgb(26, 177, 26);
-                letter-spacing: 2px;
-                text-transform: uppercase; /* Hace el texto más impactante */
             }
 
             .reseñas {
@@ -254,25 +273,128 @@
                 top: 0;
                 width: 100%;
                 height: 100%;
-                background-color: rgba(0, 0, 0, 0.6);
+                background-color: rgba(0, 0, 0, 0.75);
+                backdrop-filter: blur(3px);
             }
+
+            /* CENTRADO absoluto con animación */
             .modal-content {
-                background-color: #111;
-                margin: auto;
-                padding: 20px;
-                border: 1px solid #888;
-                width: 300px;
-                border-radius: 10px;
-                color: #fff;
-                font-family: "Cinzel Decorative", cursive;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: #18381c;
+                padding: 25px;
+                border: 3px solid #a67c00;
+                width: 320px;
+                border-radius: 16px;
+                color: #f1e8d9;
+                font-family: "Uncial Antiqua", cursive;
+                box-shadow: 0 0 30px rgba(0, 100, 0, 0.5),
+                    0 0 15px rgba(166, 124, 0, 0.6);
+                background-image: url("https://www.transparenttextures.com/patterns/celtic.png");
+                background-blend-mode: overlay;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                animation: fadeZoom 0.4s ease;
             }
+
+            /* Animación */
+            @keyframes fadeZoom {
+                0% {
+                    opacity: 0;
+                    transform: translate(-50%, -50%) scale(0.9);
+                }
+                100% {
+                    opacity: 1;
+                    transform: translate(-50%, -50%) scale(1);
+                }
+            }
+
             .close {
-                color: #aaa;
-                float: right;
-                font-size: 24px;
+                color: #d4af37;
+                align-self: flex-end;
+                font-size: 28px;
                 font-weight: bold;
                 cursor: pointer;
+                transition: 0.3s ease;
             }
+
+            .close:hover {
+                color: #ffd700;
+                text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+            }
+
+            .modal-content h2 {
+                color: #d4af37;
+                text-align: center;
+                margin-bottom: 20px;
+                letter-spacing: 1px;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            }
+
+            /* FORM centrado */
+            .modal-content form {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            /* INPUTS */
+            .modal-content input {
+                background-color: #0c2812;
+                border: 2px solid #4d774e;
+                color: #f1e8d9;
+                padding: 10px;
+                margin: 12px 0;
+                border-radius: 8px;
+                font-family: "Cormorant Garamond", serif;
+                font-weight: bold;
+                transition: 0.3s ease;
+                width: 100%;
+                max-width: 260px;
+                text-align: center;
+                box-sizing: border-box;
+            }
+
+            .modal-content input:focus {
+                outline: none;
+                border-color: #a67c00;
+                box-shadow: 0 0 8px rgba(166, 124, 0, 0.6);
+            }
+
+            /* BOTÓN centrado perfectamente */
+            .modal-content button {
+                background-color: #23552e;
+                color: #f1e8d9;
+                font-weight: bold;
+                border: 2px solid #a67c00;
+                border-radius: 8px;
+                padding: 10px;
+                margin-top: 18px;
+                cursor: pointer;
+                font-family: "Uncial Antiqua", cursive;
+                letter-spacing: 1px;
+                transition: 0.3s ease;
+                width: 100%;
+                max-width: 260px;
+                box-sizing: border-box;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+
+            .modal-content button:hover {
+                background-color: #1f6d30;
+                box-shadow: 0 0 15px rgba(0, 153, 0, 0.6),
+                    0 0 5px rgba(255, 215, 0, 0.4) inset;
+            }
+
+            /* BOTON */
+
             input,
             button {
                 width: 100%;
@@ -281,10 +403,30 @@
                 font-size: 16px;
             }
             button {
+                cursor: pointer;
                 background-color: #008000;
                 color: white;
+                font-weight: bold;
                 border: none;
                 border-radius: 5px;
+                transition: 0.3s ease;
+            }
+
+            button:hover {
+                box-shadow: 0px 0px 15px rgba(0, 153, 0, 0.8),
+                    0px 0px 5px rgba(255, 255, 255, 0.5) inset;
+                filter: brightness(1.1);
+            }
+
+            .txtW {
+                font-family: 'Uncial Antiqua';
+                color: #d4af37;
+                font-weight: bold;
+            }
+
+            #user-icon {
+                color: #d4af37;
+                font-weight: bold;
             }
         </style>
     </head>
@@ -316,7 +458,7 @@
                     <h1 class="titulo">RAILLO'S PUB</h1>
                 </div>
                 <div class="sesion">
-                    <i class="fa-solid fa-user"></i>
+                    <i id="user-icon" class="fa-solid fa-user"></i>
                     <div id="user"></div>
                 </div>
 
@@ -664,24 +806,39 @@
             }, 9000); // Cambia de imagen cada 7 segundos
         });
 
+        // == AJAX LOGIN TRABAJADOR ==
+
         $(document).ready(function () {
-            // Verificar sesión
-            $.get("/api/user", function (data) {
-                if (data && data.name) {
-                    $("#user").html("Bienvenido, " + data.name);
+            // Verificar sesión de usuario cuando la página carga
+            $.get("/check-session", function (data) {
+                if (data.logged_in) {
+                    // Usuario está logueado
+                    $("#user-icon").show(); // Mostrar icono de usuario
+                    $("#user").html("<span class='txtW'>Bienvenido, " + data.user + "</span>");
+
+                    // Agregar enlace al panel de administración si está autenticado
                     $(".dropdown-menu").append(`
-        <a href="webs/admin.html">
-          <i class="fa-solid fa-user-tie"></i>
-          <p>PANEL TRABAJADORES (ADMIN)</p>
-        </a>`);
+                <a href="webs/admin.html">
+                    <i class="fa-solid fa-user-tie"></i>
+                    <p>PANEL TRABAJADORES (ADMIN)</p>
+                </a>`);
                 } else {
+                    // Usuario no está logueado
+                    $("#user-icon").hide(); // Ocultar icono de usuario
                     $("#user").html(
                         '<button id="loginBtn">¿Eres trabajador?</button>'
                     );
                 }
+            }).fail(function () {
+                // En caso de error, mostrar botón de login
+                $("#user-icon").hide();
+                $("#user").html(
+                    '<button id="loginBtn">¿Eres trabajador?</button>'
+                );
+                console.log("Error al verificar el estado de la sesión");
             });
 
-            // Modal
+            // Configuración del modal
             $(document).on("click", "#loginBtn", function () {
                 $("#loginModal").fadeIn();
             });
@@ -690,24 +847,51 @@
                 $("#loginModal").fadeOut();
             });
 
-            // Login
+            // Formulario de login - Modificado para obtener token CSRF primero
             $("#loginForm").submit(function (e) {
                 e.preventDefault();
-                $.ajax({
-                    url: "/login",
-                    method: "POST",
-                    data: $(this).serialize(),
-                    success: function (res) {
-                        if (res.success) {
-                            location.reload();
-                        } else {
-                            alert("Credenciales incorrectas");
-                        }
-                    },
-                    error: function () {
-                        alert("Error de servidor.");
-                    },
+
+                // Primero obtenemos el token CSRF
+                $.get("/get-csrf-token", function (data) {
+                    // Datos del formulario con el token obtenido
+                    var formData = {
+                        email: $('input[name="email"]').val(),
+                        password: $('input[name="password"]').val(),
+                        _token: data.token,
+                    };
+
+                    // Enviamos el formulario con el token correcto
+                    $.ajax({
+                        url: "/login-user",
+                        type: "POST",
+                        data: formData,
+                        success: function (res) {
+                            if (res.success) {
+                                // Si el login es exitoso, recarga la página
+                                location.reload();
+                            } else {
+                                alert("Credenciales incorrectas");
+                            }
+                        },
+                        error: function (xhr) {
+                            console.log("Error:", xhr.responseText);
+                            alert(
+                                "Error al conectar con el servidor. Inténtalo de nuevo más tarde."
+                            );
+                        },
+                    });
+                }).fail(function () {
+                    alert(
+                        "Error al obtener el token CSRF. Inténtalo de nuevo más tarde."
+                    );
                 });
+            });
+
+            // Cerrar modal al hacer clic fuera de él
+            $(window).click(function (e) {
+                if ($(e.target).is(".modal")) {
+                    $(".modal").fadeOut();
+                }
             });
         });
     </script>

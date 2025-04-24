@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Response;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Hash;
 
 Route::get('/', function () {
     $path = public_path('index.html');
@@ -19,6 +22,11 @@ Route::get('/', function () {
     abort(404);
 });
 
+// Obtener el CSRF token para AJAX
+Route::get('/get-csrf-token', function () {
+    return response()->json(['token' => csrf_token()]);
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -28,15 +36,26 @@ Route::get('/admin', function () {
     return view('admin.dashboard');
 })->name('admin.dashboard')->middleware('auth');
 
-Route::post('/login', function (Request $request) {
-    if (Auth::attempt($request->only('email', 'password'))) {
-        return response()->json(['success' => true]);
+// Ruta para hacer login
+Route::post('/login-user', function (Request $request) {
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json(['success' => false, 'message' => 'Credenciales inválidas']);
     }
-    return response()->json(['success' => false]);
+
+    Session::put('user', $user->name); // Guardamos el nombre en sesión
+
+    return response()->json(['success' => true, 'user' => $user->name]);
 });
 
-Route::get('/api/user', function () {
-    return Auth::user();
+// Ruta para verificar si hay sesión activa
+Route::get('/check-session', function () {
+    if (Session::has('user')) {
+        return response()->json(['logged_in' => true, 'user' => Session::get('user')]);
+    }
+
+    return response()->json(['logged_in' => false]);
 });
 
 Route::middleware('auth')->group(function () {
